@@ -1,5 +1,9 @@
 package br.com.fabio.imdbappjava;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -9,9 +13,14 @@ import java.net.http.HttpResponse;
 
 public class ApplicationRunner {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws JsonProcessingException {
         ApplicationRunner app = new ApplicationRunner();
-        System.out.println(app.get());
+        String responseBody = app.get();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        ImdbResponse parsedValue = mapper.readValue(responseBody, ImdbResponse.class);
+        System.out.println(parsedValue);
     }
 
     public String get() {
